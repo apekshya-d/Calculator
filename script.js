@@ -5,6 +5,9 @@ let operators = Array.from(document.querySelectorAll('.operator'));
 let equalsTo = document.querySelector('#equalsTo');
 let clearButton = document.querySelector('#clearButton');
 let plusMinus = document.querySelector('#plusMinus');
+let point = document.querySelector('.point');
+let percent = document.querySelector('.percent');
+let backspace = document.querySelector('#backspace');
 
 let a; //currentNumber
 let b; // nextNumber
@@ -13,30 +16,52 @@ let lastPressed = '';
 let history = [];
 
 numbers.forEach((number)=>{
-    number.addEventListener('click',(e)=>{
-        if( lastPressed === '' || lastPressed === 'number'){
-        primaryDisplay.textContent += e.target.textContent;
+    number.addEventListener('click', (e)=>{
+        if( lastPressed === 'number'){
+            primaryDisplay.textContent += e.target.textContent;
+            history[history.length-1] = primaryDisplay.textContent;
         }else{
             primaryDisplay.textContent = e.target.textContent;
+            history.push(e.target.textContent);
         }
         lastPressed = 'number';
-        history.push(e.target.textContent);
+
         secondaryDisplay.textContent = history.join('');
     })
 
 });
 
+point.addEventListener('click', (e)=>{
+    if(!primaryDisplay.textContent.includes('.')){
+    primaryDisplay.textContent += e.target.textContent;
+    history.push(e.target.textContent);
+    secondaryDisplay.textContent = history.join('');
+    }
+})
+
+percent.addEventListener('click', (e)=>{
+    primaryDisplay.textContent = primaryDisplay.textContent / 100;
+    history.splice(-1, 1, primaryDisplay.textContent);
+    secondaryDisplay.textContent = history.join('');
+})
+
 plusMinus.addEventListener('click', (e)=>{
    if(primaryDisplay.textContent > 0 && lastPressed === 'number'){
     primaryDisplay.textContent = -Math.abs(primaryDisplay.textContent);
-    history.splice(history.length-1, 1, primaryDisplay.textContent);
+    history.splice(-1, 1, primaryDisplay.textContent);
     secondaryDisplay.textContent = history.join('');
    }
    else if(primaryDisplay.textContent <= 0 && lastPressed === 'number'){
     primaryDisplay.textContent = Math.abs(primaryDisplay.textContent);
-    history.splice(history.length-1, 1, primaryDisplay.textContent);
+    history.splice(-1, 1, primaryDisplay.textContent);
     secondaryDisplay.textContent = history.join('');
    }
+})
+
+backspace.addEventListener('click', (e) => {
+    primaryDisplay.textContent = primaryDisplay.textContent.substring(0,primaryDisplay.textContent.length-1);
+    history.splice(-1, 1, primaryDisplay.textContent);
+    secondaryDisplay.textContent = history.join('');
 })
 
 operators.forEach((operator)=>{
@@ -85,19 +110,19 @@ clearButton.addEventListener('click', () => {
 })
 
 function add(a, b){
-    return parseInt(a) + parseInt(b);
+    return parseFloat(a) + parseFloat(b);
 }
 
 function subtract(a, b){
-   return a - b;
+   return parseFloat(a - b);
 }
 
 function multiply(a, b){
-  return a * b;
+  return parseFloat(a * b);
 }
 
 function divide(a, b){
-   return a / b;
+   return parseFloat(a / b);
 }
 
 function operate(selectedOperator, a, b){
