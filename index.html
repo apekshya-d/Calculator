@@ -4,36 +4,47 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Calculator</title>
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="display">
-        <div id="primaryDisplay"></div>
-        <div id = "secondaryDisplay"></div>
+    <div id="rim" class="roundedCorner">
+        <div id="calculator" class="roundedCorner">
+            <div class='display-rim'>
+                <div class="display-design">
+                    <div id="display">
+                        <div id = "secondaryDisplay"></div>
+                        <div id="primaryDisplay"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="keys">
+                <button id="clearButton" >AC</button>
+                <button id="backspace">⬅</button>
+                <button id="plusMinus">+/-</button>
+                <button class="percent">%</button>
+                <button class="numbers">7</button>
+                <button class="numbers">8</button>
+                <button class="numbers">9</button>
+                <button id="division" class="operator">/</button>
+                <button class="numbers">4</button>
+                <button class="numbers">5</button>
+                <button class="numbers">6</button>
+                <button id="multiplication" class="operator">×</button>
+                <button class="numbers">1</button>
+                <button class="numbers">2</button>
+                <button class="numbers">3</button>
+                <button id="subtraction" class="operator">-</button>
+                <button class="point">.</button>
+                <button class="numbers">0</button>
+                <button id="equalsTo">=</button>
+                <button id="addition" class="operator">+</button>
+            </div>
+        </div>
     </div>
-    <button class="numbers">1</button>
-    <button class="numbers">2</button>
-    <button class="numbers">3</button>
-    <button class="numbers">4</button>
-    <button class="numbers">5</button>
-    <button class="numbers">6</button>
-    <button class="numbers">7</button>
-    <button class="numbers">8</button>
-    <button class="numbers">9</button>
-    <button class="numbers">0</button>
-    <button class="point">.</button>
-    <button class="percent">%</button>
-    <button id="plusMinus">+/-</button>
-    <button id="backspace">⬅</button>
-    <button id="addition" class="operator">+</button>
-    <button id="subtraction" class="operator">-</button>
-    <button id="multiplication" class="operator">*</button>
-    <button id="division" class="operator">/</button>
-    <button id="clearButton" >clear</button>
-    <button id="equalsTo">=</button>
-    
-
+    <footer>Apekshya Dhakal &copy; 2022</footer>
 </body>
+
 </html>

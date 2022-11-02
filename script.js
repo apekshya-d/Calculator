@@ -26,7 +26,7 @@ numbers.forEach((number)=>{
         }
         lastPressed = 'number';
 
-        secondaryDisplay.textContent = history.join('');
+        secondaryDisplay.textContent = history.join(' ');
     })
 
 });
@@ -35,43 +35,47 @@ point.addEventListener('click', (e)=>{
     if(!primaryDisplay.textContent.includes('.')){
     primaryDisplay.textContent += e.target.textContent;
     history.push(e.target.textContent);
-    secondaryDisplay.textContent = history.join('');
+    secondaryDisplay.textContent = history.join(' ');
     }
 })
 
 percent.addEventListener('click', (e)=>{
     primaryDisplay.textContent = primaryDisplay.textContent / 100;
     history.splice(-1, 1, primaryDisplay.textContent);
-    secondaryDisplay.textContent = history.join('');
+    secondaryDisplay.textContent = history.join(' ');
 })
 
 plusMinus.addEventListener('click', (e)=>{
    if(primaryDisplay.textContent > 0 && lastPressed === 'number'){
     primaryDisplay.textContent = -Math.abs(primaryDisplay.textContent);
     history.splice(-1, 1, primaryDisplay.textContent);
-    secondaryDisplay.textContent = history.join('');
+    secondaryDisplay.textContent = history.join(' ');
    }
    else if(primaryDisplay.textContent <= 0 && lastPressed === 'number'){
     primaryDisplay.textContent = Math.abs(primaryDisplay.textContent);
     history.splice(-1, 1, primaryDisplay.textContent);
-    secondaryDisplay.textContent = history.join('');
+    secondaryDisplay.textContent = history.join(' ');
    }
 })
 
 backspace.addEventListener('click', (e) => {
     primaryDisplay.textContent = primaryDisplay.textContent.substring(0,primaryDisplay.textContent.length-1);
     history.splice(-1, 1, primaryDisplay.textContent);
-    secondaryDisplay.textContent = history.join('');
+    secondaryDisplay.textContent = history.join(' ');
 })
 
 operators.forEach((operator)=>{
     operator.addEventListener('click',(e) => {
-        if (lastPressed !== 'number' && lastPressed !== 'operator') {
+        if (lastPressed !== 'number' && lastPressed !== 'operator' && lastPressed !== 'equalsTo') {
             return;
         } else if (lastPressed === 'operator'){
             history.splice(history.length-1, 1,` ${e.target.textContent} `);
-            secondaryDisplay.textContent = history.join('');  
-        } else if (lastPressed === 'number') {
+            secondaryDisplay.textContent = history.join(' ');  
+        } else if(lastPressed === 'equalsTo'){
+            a = primaryDisplay.textContent;
+            history.push(e.target.textContent);
+            secondaryDisplay.textContent = history.join(' ');
+        }else if (lastPressed === 'number') {
             if (typeof a === "undefined"){
                 a = primaryDisplay.textContent;
             } else {
@@ -80,8 +84,8 @@ operators.forEach((operator)=>{
                 primaryDisplay.textContent = a;
             }
 
-            history.push(` ${e.target.textContent} `);
-            secondaryDisplay.textContent = history.join('');
+            history.push(e.target.textContent);
+            secondaryDisplay.textContent = history.join(' ');
         }     
         selectedOperator = e.target.textContent;
         lastPressed = 'operator';
@@ -91,12 +95,15 @@ operators.forEach((operator)=>{
 });
 
 equalsTo.addEventListener('click', (e) => {
-        b = primaryDisplay.textContent;
-        result = operate(selectedOperator, a, b);
-        lastPressed = 'equalsTo';
-        primaryDisplay.textContent = result;
+    if(lastPressed === 'equalsTo' ){
+        return;
+    }
+    b = primaryDisplay.textContent;
+    result = operate(selectedOperator, a, b);
+    lastPressed = 'equalsTo';
+    primaryDisplay.textContent = result;
         
-    })
+})
 
 clearButton.addEventListener('click', () => {
     primaryDisplay.textContent = '';
