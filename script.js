@@ -15,97 +15,188 @@ let selectedOperator; // operator
 let lastPressed = '';
 let history = [];
 
-numbers.forEach((number)=>{
-    number.addEventListener('click', (e)=>{
-        if( lastPressed === 'number'){
-            primaryDisplay.textContent += e.target.textContent;
-            history[history.length-1] = primaryDisplay.textContent;
-        }else{
-            primaryDisplay.textContent = e.target.textContent;
-            history.push(e.target.textContent);
-        }
-        lastPressed = 'number';
+document.addEventListener('keydown', (e) => {
+    handleKeyboardEvent(e.key);
+})
 
-        secondaryDisplay.textContent = history.join(' ');
+numbers.forEach((number) => {
+    number.addEventListener('click', (e) => {
+        if(e.detail === 0) return;
+        forNumbers(e.target.textContent);
     })
-
-});
-
-point.addEventListener('click', (e)=>{
-    if(!primaryDisplay.textContent.includes('.')){
-    primaryDisplay.textContent += e.target.textContent;
-    history.push(e.target.textContent);
-    secondaryDisplay.textContent = history.join(' ');
-    }
 })
 
-percent.addEventListener('click', (e)=>{
-    primaryDisplay.textContent = primaryDisplay.textContent / 100;
-    history.splice(-1, 1, primaryDisplay.textContent);
-    secondaryDisplay.textContent = history.join(' ');
+point.addEventListener('click', (e) => {
+    if(e.detail === 0) return;
+    forPoint(e.target.textContent);
 })
 
-plusMinus.addEventListener('click', (e)=>{
-   if(primaryDisplay.textContent > 0 && lastPressed === 'number'){
-    primaryDisplay.textContent = -Math.abs(primaryDisplay.textContent);
-    history.splice(-1, 1, primaryDisplay.textContent);
-    secondaryDisplay.textContent = history.join(' ');
-   }
-   else if(primaryDisplay.textContent <= 0 && lastPressed === 'number'){
-    primaryDisplay.textContent = Math.abs(primaryDisplay.textContent);
-    history.splice(-1, 1, primaryDisplay.textContent);
-    secondaryDisplay.textContent = history.join(' ');
-   }
+percent.addEventListener('click', (e) => {
+    if(e.detail === 0) return;
+    forPercent()
+})
+
+plusMinus.addEventListener('click', (e) => {
+    if(e.detail === 0) return;
+    forPlusMinus();
 })
 
 backspace.addEventListener('click', (e) => {
-    primaryDisplay.textContent = primaryDisplay.textContent.substring(0,primaryDisplay.textContent.length-1);
-    history.splice(-1, 1, primaryDisplay.textContent);
-    secondaryDisplay.textContent = history.join(' ');
+    if(e.detail === 0) return;
+    forBackspace();
 })
 
-operators.forEach((operator)=>{
-    operator.addEventListener('click',(e) => {
-        if (lastPressed !== 'number' && lastPressed !== 'operator' && lastPressed !== 'equalsTo') {
-            return;
-        } else if (lastPressed === 'operator'){
-            history.splice(history.length-1, 1,` ${e.target.textContent} `);
-            secondaryDisplay.textContent = history.join(' ');  
-        } else if(lastPressed === 'equalsTo'){
-            a = primaryDisplay.textContent;
-            history.push(e.target.textContent);
-            secondaryDisplay.textContent = history.join(' ');
-        }else if (lastPressed === 'number') {
-            if (typeof a === "undefined"){
-                a = primaryDisplay.textContent;
-            } else {
-                b = primaryDisplay.textContent;
-                a = operate(selectedOperator, a, b);
-                primaryDisplay.textContent = a;
-            }
-
-            history.push(e.target.textContent);
-            secondaryDisplay.textContent = history.join(' ');
-        }     
-        selectedOperator = e.target.textContent;
-        lastPressed = 'operator';
-            
-     })
-    
+operators.forEach((operator) => {
+    operator.addEventListener('click', (e) => {
+        if(e.detail === 0) return;
+        forOperators(e.target.textContent);
+    });
 });
 
 equalsTo.addEventListener('click', (e) => {
-    if(lastPressed === 'equalsTo' ){
+    if(e.detail === 0) return;
+    forEqualsTo();
+})
+
+clearButton.addEventListener('click', (e) => {
+    if(e.detail === 0) return;
+    forClearButton();
+})
+
+function add(a, b) {
+    return parseFloat(a) + parseFloat(b);
+}
+
+function subtract(a, b) {
+    return parseFloat(a - b);
+}
+
+function multiply(a, b) {
+    return parseFloat(a * b);
+}
+
+function divide(a, b) {
+    return parseFloat(a / b);
+}
+
+function operate(selectedOperator, a, b) {
+    switch (selectedOperator) {
+        case '+':
+            return add(a, b);
+            break;
+        case '-':
+            return subtract(a, b);
+            break;
+        case '*':
+            return multiply(a, b);
+            break;
+        case '/':
+            return divide(a, b);
+            break;
+
+    }
+}
+
+function handleKeyboardEvent(value) {
+    if (!isNaN(parseInt(value))) {
+        forNumbers(value);
+    } else if ('+-/*'.includes(value)) {
+        forOperators(value);
+    } else if (value === '.') {
+        forPoint(value);
+    } else if (value === '=' || value === 'Enter') {
+        forEqualsTo();
+    } else if (value === '%') {
+        forPercent();
+    } else if (value === 'Backspace') {
+        forBackspace();
+    } else if (value === 'Escape') {
+        forClearButton();
+    }
+}
+
+function forNumbers(value) {
+    if (lastPressed === 'number') {
+        primaryDisplay.textContent += value;
+        history[history.length - 1] = primaryDisplay.textContent;
+    } else {
+        primaryDisplay.textContent = value;
+        history.push(value);
+    }
+    lastPressed = 'number';
+
+    secondaryDisplay.textContent = history.join(' ');
+}
+
+function forOperators(value) {
+    if (lastPressed !== 'number' && lastPressed !== 'operator' && lastPressed !== 'equalsTo') {
+        return;
+    } else if (lastPressed === 'operator') {
+        history.splice(history.length - 1, 1, ` ${value} `);
+        secondaryDisplay.textContent = history.join(' ');
+    } else if (lastPressed === 'equalsTo') {
+        a = primaryDisplay.textContent;
+        history.push(value);
+        secondaryDisplay.textContent = history.join(' ');
+    } else if (lastPressed === 'number') {
+        if (typeof a === "undefined") {
+            a = primaryDisplay.textContent;
+        } else {
+            b = primaryDisplay.textContent;
+            a = operate(selectedOperator, a, b);
+            primaryDisplay.textContent = a;
+        }
+
+        history.push(value);
+        secondaryDisplay.textContent = history.join(' ');
+    }
+    selectedOperator = value;
+    lastPressed = 'operator';
+}
+
+function forPoint(value) {
+    if (!primaryDisplay.textContent.includes('.')) {
+        primaryDisplay.textContent += value;
+        history[history.length - 1] = primaryDisplay.textContent;
+        secondaryDisplay.textContent = history.join(' ');
+    }
+}
+
+function forEqualsTo() {
+    if (lastPressed === 'equalsTo') {
         return;
     }
     b = primaryDisplay.textContent;
     result = operate(selectedOperator, a, b);
     lastPressed = 'equalsTo';
     primaryDisplay.textContent = result;
-        
-})
+}
 
-clearButton.addEventListener('click', () => {
+function forPercent() {
+    primaryDisplay.textContent = primaryDisplay.textContent / 100;
+    history.splice(-1, 1, primaryDisplay.textContent);
+    secondaryDisplay.textContent = history.join(' ');
+}
+
+function forPlusMinus() {
+    if (primaryDisplay.textContent > 0 && lastPressed === 'number') {
+        primaryDisplay.textContent = -Math.abs(primaryDisplay.textContent);
+        history.splice(-1, 1, primaryDisplay.textContent);
+        secondaryDisplay.textContent = history.join(' ');
+    } else if (primaryDisplay.textContent <= 0 && lastPressed === 'number') {
+        primaryDisplay.textContent = Math.abs(primaryDisplay.textContent);
+        history.splice(-1, 1, primaryDisplay.textContent);
+        secondaryDisplay.textContent = history.join(' ');
+    }
+}
+
+function forBackspace() {
+    primaryDisplay.textContent = primaryDisplay.textContent.substring(0, primaryDisplay.textContent.length - 1);
+    history.splice(-1, 1, primaryDisplay.textContent);
+    secondaryDisplay.textContent = history.join(' ');
+}
+
+function forClearButton() {
     primaryDisplay.textContent = '';
     secondaryDisplay.textContent = '';
     history = [];
@@ -113,39 +204,4 @@ clearButton.addEventListener('click', () => {
     b = undefined;
     selectedOperator = undefined;
     lastPressed = '';
-
-})
-
-function add(a, b){
-    return parseFloat(a) + parseFloat(b);
-}
-
-function subtract(a, b){
-   return parseFloat(a - b);
-}
-
-function multiply(a, b){
-  return parseFloat(a * b);
-}
-
-function divide(a, b){
-   return parseFloat(a / b);
-}
-
-function operate(selectedOperator, a, b){
-    switch(selectedOperator){
-        case '+' : 
-            return  add(a ,b);
-        break;
-        case '-' : 
-            return subtract(a, b);
-        break;
-        case '*' : 
-            return multiply(a, b);
-        break;
-        case '/' : 
-            return divide(a, b);
-        break;
-
-    }
 }
