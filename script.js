@@ -64,19 +64,20 @@ clearButton.addEventListener('click', (e) => {
 })
 
 function add(a, b) {
-    return parseFloat(a) + parseFloat(b);
+    let total = parseFloat(a) + parseFloat(b);
+    return Math.round(total * 100000) / 100000;
 }
 
 function subtract(a, b) {
-    return parseFloat(a - b);
+    return parseFloat(Math.round((a - b) * 100000) / 100000);
 }
 
 function multiply(a, b) {
-    return parseFloat(a * b);
+    return parseFloat(Math.round((a * b) * 100000) / 100000);
 }
 
 function divide(a, b) {
-    return parseFloat(a / b);
+    return parseFloat(Math.round((a / b) * 100000) / 100000);
 }
 
 function operate(selectedOperator, a, b) {
@@ -116,6 +117,17 @@ function handleKeyboardEvent(value) {
 }
 
 function forNumbers(value) {
+    if (lastPressed === 'equalsTo'){
+        forClearButton();
+    }
+
+    if (selectedOperator === '÷' && value === '0' ) {
+        forClearButton();
+        primaryDisplay.textContent = 'ERROR';
+        secondaryDisplay.textContent = '';
+        return;
+    }
+
     if (lastPressed === 'number') {
         primaryDisplay.textContent += value;
         history[history.length - 1] = primaryDisplay.textContent;
