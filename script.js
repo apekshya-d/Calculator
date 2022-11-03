@@ -145,7 +145,7 @@ function forOperators(value) {
     if(displayError()){
         return;
     }
-    
+
     if (lastPressed !== 'number' && lastPressed !== 'operator' && lastPressed !== 'equalsTo') {
         return;
     } else if (lastPressed === 'operator') {
@@ -228,7 +228,7 @@ function forClearButton() {
 }
 
 function displayError() {
-    if (selectedOperator === '÷' && parseInt(history[history.length-1]) === 0 ){
+    if (selectedOperator === '÷' && parseFloat(history[history.length-1]) === 0){
         forClearButton();
         primaryDisplay.textContent = 'ERROR';
         secondaryDisplay.textContent = '';
