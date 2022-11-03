@@ -121,13 +121,6 @@ function forNumbers(value) {
         forClearButton();
     }
 
-    if (selectedOperator === '÷' && value === '0' ) {
-        forClearButton();
-        primaryDisplay.textContent = 'ERROR';
-        secondaryDisplay.textContent = '';
-        return;
-    }
-
     if (lastPressed === 'number') {
         primaryDisplay.textContent += value;
         history[history.length - 1] = primaryDisplay.textContent;
@@ -149,6 +142,10 @@ function forOperators(value) {
         value = '×'
     }
 
+    if(displayError()){
+        return;
+    }
+    
     if (lastPressed !== 'number' && lastPressed !== 'operator' && lastPressed !== 'equalsTo') {
         return;
     } else if (lastPressed === 'operator') {
@@ -186,6 +183,10 @@ function forEqualsTo() {
     if (lastPressed === 'equalsTo') {
         return;
     }
+    if(displayError()){
+        return;
+    }
+
     b = primaryDisplay.textContent;
     result = operate(selectedOperator, a, b);
     lastPressed = 'equalsTo';
@@ -224,4 +225,13 @@ function forClearButton() {
     b = undefined;
     selectedOperator = undefined;
     lastPressed = '';
+}
+
+function displayError() {
+    if (selectedOperator === '÷' && parseInt(history[history.length-1]) === 0 ){
+        forClearButton();
+        primaryDisplay.textContent = 'ERROR';
+        secondaryDisplay.textContent = '';
+        return true;
+    }
 }
