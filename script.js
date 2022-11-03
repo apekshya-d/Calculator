@@ -87,10 +87,10 @@ function operate(selectedOperator, a, b) {
         case '-':
             return subtract(a, b);
             break;
-        case '*':
+        case '×':
             return multiply(a, b);
             break;
-        case '/':
+        case '÷':
             return divide(a, b);
             break;
 
@@ -100,7 +100,7 @@ function operate(selectedOperator, a, b) {
 function handleKeyboardEvent(value) {
     if (!isNaN(parseInt(value))) {
         forNumbers(value);
-    } else if ('+-/*'.includes(value)) {
+    } else if ('+-/*÷×'.includes(value)) {
         forOperators(value);
     } else if (value === '.') {
         forPoint(value);
@@ -129,6 +129,14 @@ function forNumbers(value) {
 }
 
 function forOperators(value) {
+    if (value === '/'){
+        value = '÷';
+    }
+
+    if (value === '*'){
+        value = '×'
+    }
+
     if (lastPressed !== 'number' && lastPressed !== 'operator' && lastPressed !== 'equalsTo') {
         return;
     } else if (lastPressed === 'operator') {

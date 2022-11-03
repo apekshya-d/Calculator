@@ -127,6 +127,10 @@ button:hover {
     transform: scale(1.1); 
 }
 
+button:focus {
+    outline: none;
+}
+
 #equalsTo:hover{
     background-color: rgb(64, 207, 64);
 }
